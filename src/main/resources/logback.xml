@@ -1,0 +1,27 @@
+<!-- Enable 'scan' which causes logback to reload the configuration periodically -->
+<!-- You can add debug="true" to get increased verbosity on what logback does -->
+<configuration scan="true">
+
+    <conversionRule conversionWord="traceToken" converterClass="kamon.trace.logging.LogbackTraceTokenConverter"/>
+
+    <!-- Enable JMX access; which allows us to change logging at runtime -->
+    <jmxConfigurator />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+      <!-- Filter the console output to anything at WARNING or higher -->
+      <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>DEBUG</level>
+      </filter>
+      <encoder>
+        <charset>UTF-8</charset>
+        <Pattern>%date{ISO8601} [%traceToken] [%level] [%thread] %logger{35} - %msg%n</Pattern>
+      </encoder>
+    </appender>
+
+    <!-- Send everything for the root logger to FILE and CONSOLE,
+         which have their own filters -->
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+    
+</configuration>
