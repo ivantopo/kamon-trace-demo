@@ -20,17 +20,18 @@ object Main extends App {
 
   def traceName(name: String): Directive0 = mapRequest { req ⇒
     Tracer.withNewContext(name) {
+      // Here we manually fetch and dump the current context.
       log.error("Log message dumping trace context" + Tracer.currentContext + ": "+ Tracer.currentContext.token  + " Thread:" + Thread.currentThread().getName)
       req
     }
   }
 
   def handleRequest() = {
+    // This log entry should have a trace context, but instead we see [undefined] in the output
     log.info("Handling Request....")
     "OK"
   }
 
-  // Combine the routes from all the Route traits we mix in....
   val routes = {
     traceName("APIRequest") {
       path("demo") {
